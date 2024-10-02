@@ -9,7 +9,7 @@
             target: "/",
         },
         {
-            name: "Todo",
+            name: "Messages",
             target: "/message",
         },
         {
@@ -24,4 +24,6 @@
 <!-- make the NavBar in layout so that every subpage gets it. -->
 <NavBar navItems={navTargets} />
 
-<slot />
+<div style="padding-top: 8rem;">
+    <slot />
+</div>

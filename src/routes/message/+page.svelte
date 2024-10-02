@@ -1,12 +1,5 @@
 <script lang="ts">
-    import Button from "$lib/components/Button.svelte";
-    import TextInput from "$lib/components/TextInput.svelte";
-    import PostItem from "$lib/components/PostItem.svelte";
-    import { addLike, getUserLikes, newPost, onPostChange, removeLike } from "$lib/firebase";
-    import type {  Post } from "$lib/types";
-    import { onMount } from "svelte";
-
-
+    // some starting data to test our UI before database is made yet.
     let _posts: { [id: string]: Post } = {
         "1": {
             id: "1",
@@ -28,84 +21,39 @@
             likes: 0,
         },
     };
-
-    let userName = "Anon";
     let posts: { [id: string]: Post } = {};
-    let postContent = "";
-    let likedPosts = new Set<string>();
+    let idIndex = 0; // remove this when db is ready, until then, use this to index objs.
 
-    $: if (userName && userName.length > 0) {
-        getUserLikes(userName).then((likes) => {
-            likedPosts = new Set<string>(likes);
-        });
-    }
+    // TODO create variables to track userName, content of the post input, and likedPost ids
 
-    $:console.log(posts);
-    
+    // TODO do a reactive statement to update list of likes whenever username changes.
 
-    onMount(async () => {
-        onPostChange((changedPosts) => {
-            changedPosts.forEach((post) => {
-                posts[post.id] = post;
-            });
-        });
-    });
+    // TODO onMount/when app loads to setup onPostChange() callbacks, that updates posts list on change.
 
     function addPost() {
-        newPost(userName, postContent);
-        // no need to modify posts list here, onPostChange will trigger
-        // local changes will trigger onPostChange immediately, before the data is written to db.
-        // see:https://firebase.google.com/docs/firestore/query-data/listenhttps://firebase.google.com/docs/firestore/query-data/listen
+        // TODO add new Posts to the list when this function is called.
+        // TODO once database is ready, reflect changes in db.
     }
 
     function toggleLike(postid: string, liked: boolean) {
-        if (liked) {
-            removeLike(postid, userName);
-            likedPosts.delete(postid)
-        } else {
-            addLike(postid, userName);
-            likedPosts.add(postid);
-        }
+        // TODO if liked, make it not liked and vice versa.
+        // TODO once db is ready, reflect changes in db.
     }
 </script>
 
 <h1>My Message Board</h1>
 
 <div style="display: flex; flex-direction:column; width:400px;">
-    <TextInput label="My name is" placeholder="name here" bind:value={userName} />
+    <!--TODO Name input -->
 
-    <div class="hori">
-        <TextInput
-            label="Post"
-            placeholder="Body of your post here..."
-            style="flex:1;"
-            bind:value={postContent}
-            disabled={userName.length == 0}
-        />
-        <Button
-            disabled={userName.length == 0}
-            on:click={() => {
-                addPost();
-            }}
-        >
-            Submit
-        </Button>
-    </div>
+    <!-- TODO input field for post content -->
+    <!-- TODO button to submit post content -->
 </div>
 
 <div class="posts">
-    {#each Object.values(posts) as post, index (post.id)}
-        <PostItem
-            {post}
-            on:liketoggle={(e) => {
-                toggleLike(post.id, e.detail.state);
-            }}
-            liked={likedPosts.has(post.id)}
-        />
-    {/each}
+    <!-- TODO do a #each statement to render each post -->
 </div>
 
-<!-- Import and put the TodoList Component here, and give it the list of todoItems. -->
 
 <style>
     .hori {

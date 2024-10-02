@@ -1,122 +1,61 @@
-// Import the functions you need from the SDKs you need
 
 import { initializeApp } from "firebase/app";
-import { addDoc, arrayRemove, arrayUnion, collection, doc, getDoc, getDocs, getFirestore, increment, onSnapshot, query, QueryDocumentSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { doc } from "firebase/firestore";
 import type { Post } from "./types";
 
 
-// TODO: Add SDKs for Firebase products that you want to use
-
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-
 // Your web app's Firebase configuration
-
-// Your web app's Firebase configuration
-
+// here the api keys are public by design, every client se a public key, then security rules server side restricts access
 const firebaseConfig = {
-
-    apiKey: "AIzaSyBWe29kEXwqUrpDcFfActe1vrtgrfVp7VU",
-
-    authDomain: "simpler-sveltefirebase-demo.firebaseapp.com",
-
-    projectId: "simpler-sveltefirebase-demo",
-
-    storageBucket: "simpler-sveltefirebase-demo.appspot.com",
-
-    messagingSenderId: "1096851355580",
-
-    appId: "1:1096851355580:web:a2374a415bd3ad25109db9"
-
+    // TODO get api keys and other info from firebase's site.
 };
 
 
-// Initialize Firebase
-
-
 
 // Initialize Firebase
 
-export const firebase = initializeApp(firebaseConfig);
-export const db = getFirestore(firebase)
+// TODO get the default database when app starts (free plan only gets one db)
+// const db = getFirestore(firebase)
 
 export async function newPost(userName: string, content: string) {
-
-    // make a ref to a collection called posts, then add a doc to it
-    await addDoc(collection(db, "posts"), {
-        // each json field is converted to a document property in firebase
-        userName: userName,
-        content: content,
-        likes: 0
-    })
+    // TODO add a new post to a "posts" collection via the addDoc function
 }
 
 
 export async function addLike(postid: string, userName: string) {
-
-    console.log(postid, userName);
-    
     // functions like doc and collection takes any number of string args as the path to doc or collection
-    await updateDoc(doc(db, 'posts', postid), {
-        // increment is a kind of special function in the value field to represent an action on the db
-        likes: increment(1)
-    })
+    // increment is a kind of special function in the value field to represent an action on the db
+    // TODO use updateDoc and increment() to increase vote by 1
+
 
     // also add a record to track which posts the current user liked already
-    await setDoc(doc(db, "likes", userName), {
-        likes: arrayUnion(postid) // adds postid to the array, but do nothing if its already in.
-    }, {
-        // when merge is true, setDoc acts like updateDoc, but also creates the doc if it doenst exist yet.
-        merge: true
-    })
+    // when merge is true, setDoc acts like updateDoc, but also creates the doc if it doenst exist yet.
+    // arrayUnion() adds postid to the array, but do nothing if its already in.
+
+    // TODO use setDoc with option merge:true, and arrayUnion() to update a list of postids the username liked.
 }
 
 
 export async function removeLike(postid: string, userName: string) {
-    await updateDoc(doc(db, "posts", postid), {
-        likes: increment(-1)
-    })
-
-    await setDoc(doc(db, "likes", userName), {
-        likes: arrayRemove(postid)
-    }, {
-        merge: true
-    })
+    // TODO see addLike(), but decrease votes instead.
 }
 
 
 export async function onPostChange(onChange: (changes: Post[]) => void) {
-    const unsub = onSnapshot(query(collection(db, "posts")), snap => {
-        const posts: Post[] = [];
 
-        // .docChanges() contains only the changes, while .doc contains all the docs.
-        // note that onSnapshots read everything on the first call, so could be expensive
-        // see: https://medium.com/firebase-tips-tricks/how-to-drastically-reduce-the-number-of-reads-when-no-documents-are-changed-in-firestore-8760e2f25e9e
-        snap.docChanges().forEach(change => {
-            const data = change.doc.data();
+    // TODO use onSnapshot function to setup a callback function that is called whenever the collection of posts changes
+    // then, for each change, convert each of them to a Post obj,
+    // then, collect each post, and give it to frontend via the onChange() function provided.
 
-            // document in db doesnt include a id field so we are going to include it
-            data.id = change.doc.id;
-            posts.push( data as Post);
-        })
+    // note that onSnapshot trigger immediately when the app starts (and if app goes offline and back online later)
+    // so that this is useful for the initial fetch as well!
 
-        // call the callback to notify frontend that this batch of posts needs to be updated.
-        onChange(posts);
-        
-    })
-
-    return unsub;
 }
 
 export async function getUserLikes(userName: string) {
 
-    // get each posts the current user liked
-    const userLikeDoc = await getDoc(doc(db, "likes", userName))
-
-    if (userLikeDoc.exists()){
-
-        return userLikeDoc.data().likes as string[];
-    }
-    return [];
-
+    // TODO write a function to get each liked post of the given username
+    // note remember to return an empty list if the doc don't exists yet.
 }

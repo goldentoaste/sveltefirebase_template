@@ -1,51 +1,15 @@
 <script lang="ts">
-    import type {  Post } from "$lib/types";
-    import { createEventDispatcher } from "svelte";
-    import Button from "./Button.svelte";
+    // TODO emit custom event that fires when the like button is clicked.
 
-    import { fly } from "svelte/transition";
-
-    // take in a post object in order to "render" the Conpomnent
-    export let post: Post;
-
-    // content currently in the input field.
-    let commentInput = "";
-
-    // createEventDispatcher returns a function, which lets use dispatch custom events
-    // stuff below in <...> is typescript generics to provide type info on our custom event
-    const dispatch = createEventDispatcher<{
-        // this is how to type eventDispatcher
-        liketoggle: {
-            state: boolean;
-        };
-    }>();
-
-    export let liked: boolean = false;
-
-
-
+    // TODO declare variables to track the contained posts and if the like button is highlighted.
 </script>
 
-<div class="messageParent" transition:fly={{ x: -50, duration: 500 }}>
-    <!-- use the post obj to fill in the blanks -->
-    <p id="userName">{post.userName}</p>
-    <p>{post.content}</p>
+<!-- TODO apply transition to this parent container -->
+<div class="messageParent">
+    <!-- TODO use the post object to render -->
+    <!-- 👍 -->
 
-    <div id="votes">
-        <Button highLighted={liked} on:click={
-            ()=>{
-                dispatch("liketoggle", {
-                    state:liked
-                })
-            }
-        }>
-            <span class="thumb">👍 {post.likes}</span>
-        </Button>
-    </div>
-
-
-
-
+    <!-- TODO Make a button here that contain 👍, number of likes, highlights if liked, and emits custom event on click. -->
 </div>
 
 <style>
@@ -72,5 +36,4 @@
         font-size: large;
         transition: transform 400s ease-out;
     }
-
 </style>

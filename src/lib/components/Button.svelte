@@ -1,15 +1,10 @@
 <script>
-    export let disabled = false;
-    export let highLighted = false;
-    export let style = "";
+    // TODO implement a simple button component here!
+    // make it support ability to be disabled, highlighted, custom styles, and bubbles events.
 </script>
 
-<!-- bubbles on click -->
-<button class:disabled class:highLighted {disabled} on:click {style}>
-    <slot />
-</button>
-
 <style>
+    /* Use the provided */
     button {
         border: var(--focus) 2px solid;
         border-radius: 5px;
@@ -30,7 +25,7 @@
         filter: brightness(0.95);
     }
 
-    .disabled {
+    button:disabled {
         filter: brightness(0.6);
         pointer-events: none;
     }

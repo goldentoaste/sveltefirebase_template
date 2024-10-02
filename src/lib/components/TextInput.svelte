@@ -1,19 +1,9 @@
 <script lang="ts">
-    export let value: string ="Default name";
-
-    export let placeholder = "type here...";
-    export let disabled = false;
-    export let label = "";
-
-    export let style ="";
+    // TODO lets build a TextInput component that can have a placeholder, to be disabled, can have a label, 
+    // supports custom style, and exports the input's value.
 </script>
 
-<div id="inputHolder" {style}>
-    {#if label.length > 0}
-        <label for="textinput">{label}</label>
-    {/if}
-    <input name="textinput" type="text" bind:value {placeholder} {disabled}/>
-</div>
+
 
 <style>
     input {
